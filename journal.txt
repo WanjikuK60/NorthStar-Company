@@ -1,0 +1,28 @@
+📓 Day 1 Journal (Quick Log)
+Tool: Webhook (unfamiliar)
+
+Backend: FastAPI /webhook POST endpoint built and tested
+
+Frontend: Simple HTML + JS form using fetch() to send JSON and display reply
+
+Success: End‑to‑end integration confirmed (demo → hello webhook → JSON response)
+
+Learned:
+
+FastAPI basics (routes, JSON parsing)
+
+Running server with python -m uvicorn app:app --reload
+
+Using curl + browser frontend for testing
+
+Adding CORS middleware to fix browser errors
+
+Blockers:
+
+uvicorn not found in Git Bash → solved with python -m uvicorn
+
+File structure confusion → fixed with clear folder setup (app.py, index.html, journal.txt)
+
+Insights: Webhooks are just HTTP POST callbacks; once understood, they’re straightforward
+
+Next: Poll warehouse API every 5 min, cache stock, expose /stock endpoint, expand frontend to show cached data
