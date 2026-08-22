@@ -1,0 +1,52 @@
+Day 3 Journal – Webhook Warehouse Polling System
+Date: August 22, 2026
+Project: Meridian Pivot Sprint – Backend + Frontend Build
+
+Objective
+The goal for Day 3 was to implement a webhook-based warehouse polling system with caching, then connect it to the frontend for live updates.
+
+Tasks Completed
+Backend Setup:
+
+Built webhook endpoint using FastAPI to receive warehouse status updates.
+
+Implemented polling logic so the system checks for new warehouse events at intervals.
+
+Added caching layer to store recent webhook responses and prevent duplicate processing.
+
+Frontend Integration:
+
+Connected frontend to webhook responses via API calls.
+
+Displayed warehouse status changes in real-time on the UI.
+
+Verified that cached data was correctly served when no new webhook events arrived.
+
+Testing:
+
+Simulated multiple webhook POST requests with different warehouse payloads.
+
+Confirmed that the backend updated records and the frontend reflected changes.
+
+Logged test results and errors in journal.txt.
+
+Challenges
+Debugging webhook endpoint routing (initial “Not Found” errors).
+
+Ensuring caching didn’t serve stale data when new events arrived.
+
+Handling duplicate webhook calls gracefully.
+
+Learnings
+Webhooks provide a more event-driven approach compared to pure polling.
+
+Caching is essential to balance efficiency and accuracy in real-time systems.
+
+Integration testing across backend and frontend is critical for smooth data flow.
+
+Next Steps
+Add retry logic for failed webhook deliveries.
+
+Expand webhook schema to handle more warehouse event types.
+
+Improve frontend visualization for warehouse activity logs.
