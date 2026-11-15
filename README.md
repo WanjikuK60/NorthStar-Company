@@ -11,8 +11,8 @@ My Day 1 deliverable for the Northstar Sprint, a one-week industry simulation: a
 ## Run it
 
 ```bash
-git clone https://github.com/WanjikuK60/NorthStar-Company.git
-cd NorthStar-Company
+git clone https://github.com/WanjikuK60/northstar-day1-webhook.git
+cd northstar-day1-webhook
 python -m venv venv
 source venv/Scripts/activate   # Windows Git Bash; on macOS/Linux use: source venv/bin/activate
 pip install -r requirements.txt
