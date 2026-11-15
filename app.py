@@ -1,19 +1,36 @@
-from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
+"""Day 1 webhook prototype: a FastAPI endpoint that receives JSON events.
 
-app = FastAPI()
+Run:  python -m uvicorn app:app --reload
+Then open http://127.0.0.1:8000 to send test events from the browser.
+"""
 
-# Allow frontend to talk to backend
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # allow all for testing
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+import logging
+from pathlib import Path
+
+from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from pydantic import BaseModel, Field
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("webhook")
+
+BASE_DIR = Path(__file__).resolve().parent
+
+app = FastAPI(title="Day 1 Webhook Prototype")
+
+
+class WebhookEvent(BaseModel):
+    event: str = Field(min_length=1, max_length=100)
+    message: str = Field(default="", max_length=1000)
+
+
+@app.get("/")
+def index() -> FileResponse:
+    """Serve the test page from the same origin, so no CORS setup is needed."""
+    return FileResponse(BASE_DIR / "index.html")
+
 
 @app.post("/webhook")
-async def webhook_listener(request: Request):
-    data = await request.json()
-    print("Webhook received:", data)
-    return {"status": "ok", "received": data}
+def receive_webhook(payload: WebhookEvent) -> dict:
+    logger.info("Webhook received: %s", payload.model_dump())
+    return {"status": "ok", "received": payload.model_dump()}

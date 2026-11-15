@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Webhook Chat Widget</title>
   <style>
     body {
@@ -26,6 +28,10 @@
       text-align: right;
     }
     .received {
+      background: #e2e3f3;
+      text-align: left;
+    }
+    .error {
       background: #f8d7da;
       text-align: left;
     }
@@ -46,31 +52,46 @@
   <h2>Webhook Chat Widget (Day 1)</h2>
   <div id="chatbox"></div>
 
-  <div id="controls">
-    <input id="event" placeholder="Event name" />
-    <input id="message" placeholder="Message" />
-    <button onclick="sendWebhook()">Send</button>
-  </div>
+  <form id="controls">
+    <input id="event" placeholder="Event name" aria-label="Event name" required />
+    <input id="message" placeholder="Message" aria-label="Message" />
+    <button type="submit">Send</button>
+  </form>
 
   <script>
-    async function sendWebhook() {
-      const event = document.getElementById("event").value;
-      const message = document.getElementById("message").value;
+    const form = document.getElementById("controls");
+    const eventInput = document.getElementById("event");
+    const messageInput = document.getElementById("message");
 
-      // Show what you sent
+    async function sendWebhook(event, message) {
       addMessage(`You: ${event} - ${message}`, "sent");
 
-      const res = await fetch("http://127.0.0.1:8000/webhook", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ event, message })
-      });
+      try {
+        const res = await fetch("/webhook", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ event, message }),
+        });
 
-      const data = await res.json();
+        if (!res.ok) {
+          addMessage(`Server rejected the event (status ${res.status}).`, "error");
+          return;
+        }
 
-      // Show backend reply
-      addMessage("Server: " + JSON.stringify(data.received), "received");
+        const data = await res.json();
+        addMessage("Server: " + JSON.stringify(data.received), "received");
+      } catch {
+        addMessage("Could not reach the server. Is uvicorn running?", "error");
+      }
     }
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const event = eventInput.value.trim();
+      if (!event) return;
+      sendWebhook(event, messageInput.value.trim());
+      messageInput.value = "";
+    });
 
     function addMessage(text, type) {
       const chatbox = document.getElementById("chatbox");
