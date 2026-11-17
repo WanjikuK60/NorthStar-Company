@@ -2,6 +2,8 @@
 
 My Day 1 deliverable for the Northstar Sprint, a one-week industry simulation: a FastAPI webhook receiver with a small browser page for sending test events. Day 1 was about learning webhooks, a tool I hadn't used before.
 
+**Live demo:** https://northstar-day1-webhook.onrender.com (free Render server: the first visit after a quiet spell can take up to a minute to wake up). The GitHub Pages copy at https://wanjikuk60.github.io/northstar-day1-webhook/ sends its events to the same server.
+
 ## What it does
 
 - `POST /webhook` accepts a JSON event (`event` is required, `message` is optional), logs it, and echoes it back.
@@ -41,6 +43,7 @@ python -m pytest -q
 ```
 app.py          FastAPI app: the webhook endpoint and the test page route
 index.html      Browser page for sending test events
+render.yaml     Render Blueprint: runs the app on Render's free plan
 test_app.py     API tests
 JOURNAL.md      What I built, learned and got stuck on during Day 1
 ```
