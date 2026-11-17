@@ -2,12 +2,17 @@
 
 Run:  python -m uvicorn app:app --reload
 Then open http://127.0.0.1:8000 to send test events from the browser.
+
+Live: the same app runs on Render's free plan (see render.yaml). The GitHub
+Pages copy of index.html sends its events there, so that origin is allowed
+through CORS.
 """
 
 import logging
 from pathlib import Path
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
@@ -17,6 +22,14 @@ logger = logging.getLogger("webhook")
 BASE_DIR = Path(__file__).resolve().parent
 
 app = FastAPI(title="Day 1 Webhook Prototype")
+
+# Only the GitHub Pages copy of the test page needs cross-origin access.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://wanjikuk60.github.io"],
+    allow_methods=["POST"],
+    allow_headers=["Content-Type"],
+)
 
 
 class WebhookEvent(BaseModel):

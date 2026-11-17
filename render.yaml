@@ -1,0 +1,13 @@
+# Render Blueprint: runs this FastAPI app on Render's free plan.
+# Create it from the Render dashboard: New > Blueprint > pick this repo.
+services:
+  - type: web
+    name: northstar-day1-webhook
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7

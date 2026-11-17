@@ -35,6 +35,11 @@
       background: #f8d7da;
       text-align: left;
     }
+    .info {
+      color: #555;
+      font-style: italic;
+      text-align: center;
+    }
     #controls {
       display: flex;
       gap: 5px;
@@ -63,11 +68,23 @@
     const eventInput = document.getElementById("event");
     const messageInput = document.getElementById("message");
 
+    // On GitHub Pages there is no server, so send events to the copy of this
+    // app running on Render. Locally (or on Render itself) use this server.
+    const API_BASE = location.hostname.endsWith("github.io")
+      ? "https://northstar-day1-webhook.onrender.com"
+      : "";
+
     async function sendWebhook(event, message) {
       addMessage(`You: ${event} - ${message}`, "sent");
 
+      // Render's free plan sleeps when idle; the first request can take up to a minute.
+      const wakeHint = setTimeout(
+        () => addMessage("Waking up the free server, this can take up to a minute...", "info"),
+        4000,
+      );
+
       try {
-        const res = await fetch("/webhook", {
+        const res = await fetch(`${API_BASE}/webhook`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ event, message }),
@@ -81,7 +98,9 @@
         const data = await res.json();
         addMessage("Server: " + JSON.stringify(data.received), "received");
       } catch {
-        addMessage("Could not reach the server. Is uvicorn running?", "error");
+        addMessage("Could not reach the server. Please try again in a moment.", "error");
+      } finally {
+        clearTimeout(wakeHint);
       }
     }
 
